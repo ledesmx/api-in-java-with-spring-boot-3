@@ -1,11 +1,14 @@
 package codes.ledesma.runnerz.run;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController // anotation: says that this class responds to requests
 @RequestMapping("/api/runs") // Every request mapping falls under this URL
@@ -19,10 +22,7 @@ public class RunController {
         this.runRepository = runRepository;
     }
 
-    @GetMapping("/hello") // anotation: handle the /hello endpoint
-    public String home() {
-        return "Hello, run";
-    }
+    // GET
 
     @GetMapping("")
     public List<Run> findAll() {
@@ -31,6 +31,11 @@ public class RunController {
 
     @GetMapping("/{id}")
     public Run findById(@PathVariable Integer id) {
-        return this.runRepository.getRunById(id);
+        Optional<Run> run = this.runRepository.getRunById(id);
+        if (!run.isPresent()) {
+            // To sen error status use this exception
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return run.get();
     }
 }
