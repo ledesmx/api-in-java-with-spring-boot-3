@@ -36,6 +36,10 @@ public class RunRepository {
         }
     }
 
+    public void delete(Integer id) {
+        this.runs.removeIf(run -> run.id() == id);
+    }
+
     @PostConstruct // anotation: calls the method only once, just after the initialization
     private void init() {
         var time = LocalDateTime.now();

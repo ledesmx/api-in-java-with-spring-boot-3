@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,5 +59,13 @@ public class RunController {
     public void updateRun(@RequestBody Run run) {
         this.runRepository.update(run, run.id());
 
+    }
+
+    // DELETE
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @DeleteMapping("")
+    public void deleteRun(@RequestBody Integer id) {
+        this.runRepository.delete(id);
     }
 }
