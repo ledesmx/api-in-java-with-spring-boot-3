@@ -24,7 +24,7 @@ public class RunRepository {
                 .findFirst();
     }
 
-    public void addRun(Run run) {
+    public void create(Run run) {
         this.runs.add(run);
     }
 
