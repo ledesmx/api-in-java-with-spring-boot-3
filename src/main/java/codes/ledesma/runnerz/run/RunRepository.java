@@ -28,6 +28,14 @@ public class RunRepository {
         this.runs.add(run);
     }
 
+    public void update(Run run, Integer id) {
+        Optional<Run> existingRun = getRunById(id);
+        if (existingRun.isPresent()) {
+            this.runs.remove(existingRun.get());
+            this.runs.add(run);
+        }
+    }
+
     @PostConstruct // anotation: calls the method only once, just after the initialization
     private void init() {
         var time = LocalDateTime.now();
