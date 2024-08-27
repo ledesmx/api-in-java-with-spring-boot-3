@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController // anotation: says that this class responds to requests
 @RequestMapping("/api/runs") // Every request mapping falls under this URL
@@ -38,8 +37,8 @@ public class RunController {
     public Run findById(@PathVariable Integer id) {
         Optional<Run> run = this.runRepository.getRunById(id);
         if (!run.isPresent()) {
-            // To sen error status use this exception
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            // Custom exception to send error status use
+            throw new RunNotFoundException();
         }
         return run.get();
     }
