@@ -54,18 +54,18 @@ public class RunController {
 
     // PUT
 
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    @PutMapping("")
-    public void updateRun(@RequestBody Run run) {
-        this.runRepository.update(run, run.id());
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{id}")
+    public void updateRun(@RequestBody Run run, @PathVariable Integer id) {
+        this.runRepository.update(run, id);
 
     }
 
     // DELETE
 
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @DeleteMapping("")
-    public void deleteRun(@RequestBody Integer id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void deleteRun(@PathVariable Integer id) {
         this.runRepository.delete(id);
     }
 }
