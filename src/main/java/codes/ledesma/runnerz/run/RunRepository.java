@@ -28,14 +28,6 @@ public class RunRepository {
         this.runs.add(run);
     }
 
-    public void update(Run run, Integer id) {
-        Optional<Run> existingRun = getRunById(id);
-        if (existingRun.isPresent()) {
-            this.runs.remove(existingRun.get());
-            this.runs.add(run);
-        }
-    }
-
     public void delete(Integer id) {
         this.runs.removeIf(run -> run.id() == id);
     }

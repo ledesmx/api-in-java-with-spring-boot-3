@@ -57,8 +57,14 @@ public class RunController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    public void updateRun(@Valid @RequestBody Run run, @PathVariable Integer id) {
-        this.runRepository.update(run, id);
+    public void updateRun(@Valid @RequestBody Run newRun, @PathVariable Integer id) {
+        // this.runRepository.update(run, id);
+        Optional<Run> run = this.runRepository.getRunById(id);
+        if (!run.isPresent()) {
+            throw new RunNotFoundException();
+        }
+        this.runRepository.delete(id);
+        this.runRepository.create(newRun);
 
     }
 
