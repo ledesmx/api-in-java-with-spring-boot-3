@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 @RestController // anotation: says that this class responds to requests
 @RequestMapping("/api/runs") // Every request mapping falls under this URL
 public class RunController {
@@ -47,7 +49,7 @@ public class RunController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public void addRun(@RequestBody Run run) {
+    public void addRun(@Valid @RequestBody Run run) {
         this.runRepository.create(run);
     }
 
@@ -55,7 +57,7 @@ public class RunController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    public void updateRun(@RequestBody Run run, @PathVariable Integer id) {
+    public void updateRun(@Valid @RequestBody Run run, @PathVariable Integer id) {
         this.runRepository.update(run, id);
 
     }
