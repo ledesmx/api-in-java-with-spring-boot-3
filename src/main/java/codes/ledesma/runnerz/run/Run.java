@@ -22,4 +22,10 @@ public record Run(
         LocalDateTime completedOn,
         @Positive Integer miles,
         Location location) {
+
+    public Run {
+        if (startedOn.isAfter(completedOn)) {
+            throw new IllegalArgumentException("Completed On must be afte Started On");
+        }
+    }
 }
