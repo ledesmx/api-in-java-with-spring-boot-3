@@ -2,6 +2,9 @@ package codes.ledesma.runnerz.run;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
+
 /**
  * Create data of a Run.
  * 
@@ -14,9 +17,9 @@ import java.time.LocalDateTime;
  */
 public record Run(
         Integer id,
-        String title,
+        @NotEmpty String title,
         LocalDateTime startedOn,
         LocalDateTime completedOn,
-        Integer miles,
+        @Positive Integer miles,
         Location location) {
 }
