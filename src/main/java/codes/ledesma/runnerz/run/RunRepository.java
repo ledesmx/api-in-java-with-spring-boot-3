@@ -1,46 +1,50 @@
 package codes.ledesma.runnerz.run;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-
-import jakarta.annotation.PostConstruct;
+import org.springframework.util.Assert;
 
 @Repository
 public class RunRepository {
-    private List<Run> runs = new ArrayList<Run>();
+    private final JdbcClient jdbcClient;
+
+    public RunRepository(JdbcClient jdbcClient) {
+        this.jdbcClient = jdbcClient;
+    }
 
     public List<Run> getRuns() {
-        return runs;
+        return this.jdbcClient.sql("SELECT * FROM Run")
+                .query(Run.class)
+                .list();
     }
 
     public Optional<Run> getRunById(Integer id) {
-        return runs.stream()
-                .filter(run -> run.id() == id)
-                .findFirst();
+        // We us :id to insert a param in the query and then use the param() method
+        return this.jdbcClient.sql("SELECT id,title,started_on,completed_on,miles,location FROM Run WHERE id = :id")
+                .param("id", id)
+                .query(Run.class)
+                .optional();
     }
 
     public void create(Run run) {
-        this.runs.add(run);
+        // it returns how many rows were affected
+        var updated = this.jdbcClient
+                .sql("INSERT INTO Run(id,title,started_on,completed_on,miles,location) values(?,?,?,?,?,?)")
+                .params(List.of(run.id(), run.title(), run.startedOn(), run.completedOn(), run.miles(),
+                        run.location().toString()))
+                .update();
+
+        Assert.state(updated == 1, "Failed to update run " + run.title());
     }
 
     public void delete(Integer id) {
-        this.runs.removeIf(run -> run.id() == id);
+        int updated = this.jdbcClient
+                .sql("DELETE FROM Run WHERE id = :id")
+                .param("id", id)
+                .update();
+
+        Assert.state(updated == 1, "Failed to delte run with id = " + id);
     }
-
-    @PostConstruct // anotation: calls the method only once, just after the initialization
-    private void init() {
-        var time = LocalDateTime.now();
-        var run = new Run(1, "First run", time, time.plus(1, ChronoUnit.HOURS), 10, Location.INDOOR);
-        runs.add(run);
-
-        time = LocalDateTime.now().plus(15, ChronoUnit.HOURS);
-        run = new Run(2, "Al cerro", time, time.plus(1, ChronoUnit.HOURS), 10, Location.INDOOR);
-        runs.add(run);
-    }
-
 }
