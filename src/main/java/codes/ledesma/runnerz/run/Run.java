@@ -25,7 +25,7 @@ public record Run(
 
     public Run {
         if (startedOn.isAfter(completedOn)) {
-            throw new IllegalArgumentException("Completed On must be afte Started On");
+            throw new IllegalArgumentException("Completed On must be after Started On");
         }
     }
 }
