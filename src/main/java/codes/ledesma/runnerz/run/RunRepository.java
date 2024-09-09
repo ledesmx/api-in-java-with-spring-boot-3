@@ -30,10 +30,20 @@ public class RunRepository {
 
     public void create(Run run) {
         // it returns how many rows were affected
-        var updated = this.jdbcClient
+        int updated = this.jdbcClient
                 .sql("INSERT INTO Run(id,title,started_on,completed_on,miles,location) values(?,?,?,?,?,?)")
                 .params(List.of(run.id(), run.title(), run.startedOn(), run.completedOn(), run.miles(),
                         run.location().toString()))
+                .update();
+
+        Assert.state(updated == 1, "Failed to create run " + run.title());
+    }
+
+    public void update(Run run, Integer id) {
+        int updated = this.jdbcClient
+                .sql("UPDATE Run SET title = ?, started_on = ?, completed_on = ?, miles = ?, location = ? WHERE id = ?")
+                .params(List.of(run.title(), run.startedOn(), run.completedOn(), run.miles(), run.location().toString(),
+                        id))
                 .update();
 
         Assert.state(updated == 1, "Failed to update run " + run.title());
@@ -45,6 +55,6 @@ public class RunRepository {
                 .param("id", id)
                 .update();
 
-        Assert.state(updated == 1, "Failed to delte run with id = " + id);
+        Assert.state(updated == 1, "Failed to delete run with id = " + id);
     }
 }
